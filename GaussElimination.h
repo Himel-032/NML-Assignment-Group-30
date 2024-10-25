@@ -23,7 +23,7 @@ bool GaussElimination(vector<vector<double>> &coefficients)
             double frac = coefficients[j][i]/coefficients[i][i];
             for(int k=0;k<=n;k++)
             {
-                coefficients[j][k] = coefficients[j][k] - (coefficients[i][k]*frac);
+                coefficients[j][k] = coefficients[j][k] - (coefficients[i][k]*frac); // making non diagonal element to zero
             }
         }
     }
@@ -58,7 +58,7 @@ void Backsubstitution(vector<vector<double>> &coefficients)
         {
             ans[i]  -=coefficients[i][j]*ans[j];
         }
-        ans[i] /= coefficients[i][i];
+        ans[i] /= coefficients[i][i]; // getting answer
     }
     cout<<"The solutions are(Gauss-Elimination method): ";
     for(int i=0;i<n;i++)
