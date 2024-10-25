@@ -12,8 +12,7 @@ int main()
         cout << "1.Solve Linear equations: " << endl;
         cout << "2.Solve Non-Linear equations: " << endl;
         cout << "3.Solve Differential Equation(Runge - Kutta Method): " << endl;
-        cout << "4.Matrix Inversion: " << endl
-             << endl;
+        cout << "4.Matrix Inversion: "<<endl<< endl;
         cout << "Enter the operation you want to solve : ";
 
         int cs;
