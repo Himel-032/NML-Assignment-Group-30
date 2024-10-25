@@ -6,7 +6,7 @@
 #include "false_position.h"
 #include "secant.h"
 #include "newton_raphson.h"
-#include "lu_factorization.h"
+
 
 using namespace std;
 
