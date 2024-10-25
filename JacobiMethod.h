@@ -9,7 +9,7 @@ bool isDiagonallyDominant(vector<vector<double>> & coefficients,int n)
         for(int j=0;j<n;j++)
         {
             if(i != j)
-            sum += abs(coefficients[i][j]);
+            sum += abs(coefficients[i][j]); // sum of all the elements in a row except the diagonal element
         }
         if(diagonal<sum)
         return false; // not dominant in diagonally
@@ -26,13 +26,13 @@ bool makeDiagonallyDominant(vector<vector<double>> & coefficients,int n)
         {
             if(abs(coefficients[r][i])>maxDiagonal)
             {
-                maxDiagonal = abs(coefficients[r][i]);
+                maxDiagonal=abs(coefficients[r][i]);
                 maxRow=r;
             }
         }
         if(maxRow != i)
         {
-            swap(coefficients[i],coefficients[maxRow]);
+            swap(coefficients[i],coefficients[maxRow]); // if any row exist follow the rules to be diagonally dominant
         }
     }
 
@@ -46,9 +46,9 @@ double calculateSolution(vector<vector<double>> &coefficients, vector<double> &c
         if (i == j)
             continue;
 
-        constant -= coefficients[i][j] * currValues[j];
+        constant -= coefficients[i][j] * currValues[j];  // getting new value of a variable
     }
-    return constant / coefficients[i][i];
+    return constant / coefficients[i][i]; // dividing by self constant
 }
 void JacobiIterativeMethod()
 {
