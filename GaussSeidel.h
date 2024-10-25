@@ -20,7 +20,7 @@ void GaussSeidelIterativeMethod()
         }
     }
 
-    if (isDiagonallyDominant(coefficients, n) == false)
+    if (isDiagonallyDominant(coefficients, n) == false) // checking diagonally dominant or not
     {
         if (makeDiagonallyDominant(coefficients, n) == false)
         {
@@ -30,7 +30,7 @@ void GaussSeidelIterativeMethod()
     }
 
     double tolerance = 1e-6;
-    int maxIt = 200;
+    int maxIt = 2000;
     vector<double> currValues(n, 0), newValues(n, 0);
     for (int it = 1; it <= maxIt; it++)
     {
