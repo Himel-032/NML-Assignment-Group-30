@@ -5,14 +5,14 @@ double rk4(double x0, double y0, double xEnd, double h, function<double(double, 
     double x =x0;
     double y =y0;
 
-    while (x<=xEnd)
+    while (x<=xEnd)         // RK4 method formula
     {
         double k1 =h * f(x, y);
         double k2 =h * f(x + h / 2, y + k1 / 2);
         double k3 =h * f(x + h / 2, y + k2 / 2);
         double k4 =h * f(x + h, y + k3);
-        y =y + (k1 + 2 * k2 + 2 * k3 + k4)/6;
-        x =x + h;
+        y =y + (k1 + 2 * k2 + 2 * k3 + k4)/6; // update value of y
+        x =x + h;               // updating value of x
     }
     return y;
 }
