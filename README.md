@@ -17,12 +17,16 @@ Md Himel:
 4-> I also checked for diagonally dominant matrix using the function (bool isDiagonallyDominant(vector<vector<double>> & coefficients,int n)).
 
 5-> If the coefficient matrix is not diagonally dominant , i tried to make it diagonally dominant using the function (bool makeDiagonallyDominant(vector<vector<double>> & coefficients,int n)) . If it was not possible to make the coefficient matrix digonally dominant , i simply showed a message and exited from the solution method.
-------------------------------------------------------------------------------------------------------------------------------------------------------------------2. Gauss seidel iterative Method:
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+2. Gauss seidel iterative Method:
 
 1-> In Gauss-Seidel method , i used the methods "bool isDiagonallyDominant(vector<vector<double>> & coefficients,int n),bool makeDiagonallyDominant(vector<vector<double>> & coefficients,int n),double calculateSolution(vector<vector<double>> &coefficients, vector<double> &currValues, int i, int n)" from "JacobiMethod.h" header file.All the functionallity of this method exept one is same as "Jacobi Iteration Method".
 
 2-> In jacobi method , the algorithm changes the value of variables when the value of all variables get changed.But in Gauss-Seidel method , the algorithm immediately changes the value of each variable when it get changed. I had not waited for the change of all variables. 
-------------------------------------------------------------------------------------------------------------------------------------------------------------------3. Gauss Elimination Method:
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+3. Gauss Elimination Method:
 
 I used this method to solve a system of linear equations using an augmented matrix form.
 
@@ -33,10 +37,13 @@ The fraction "frac" represents how much of the pivot row we need to subtract fro
 
 3-> I also check the consistency of the augmented matrix using the function (int checkConsistency(vector<vector<double>> &coefficients)). If the matrix is not consistent , then there can be no solution or infinite solutions. if the sum any entire row including the constant is zero, there are infinte solutions. or if all the elements are zero except the constant term in a same row, then there is no solution. 
 
-
+4-> When it is sure that there is a unique solution, i used the method (void Backsubstitution(vector<vector<double>> &coefficients)) to get the answer.
+At first , i get the solution of last variable, then i substitute this value in the upwards direction to get all the solutions.
+Then the solution is printed
 .
--------------------------------------------------------------------------------------------------------------
-4. Gauss-Jordan Elimination:
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+4. Gauss-Jordan Elimination Method:
 
 1-> In this method, the algorithm first convert the coefficient matrix into Row echelon form(Gaussian elimaination) using the method"bool GaussElimination(vector<vector<double>> &coefficients) " from "GaussElimination.h" header file . The operation is same as Gauss-Elimination Method.To do this , we also check the consistency using the function (int checkConsistency(vector<vector<double>> &coefficients)) from "GaussElimination.h" header file.
 
@@ -47,7 +54,10 @@ The fraction "frac" represents how much of the pivot row we need to subtract fro
 4-> If we convert the RREF matrix back into the equation form, there is only a constant term with a varible term in each row. Dividing the constant term by the coefficient of its corresponding variable , we get the solution for the corresponding variable.
 For doing this , we set up a loop. which will divide the constant term by the pivot element (diagonal non zero element).
 After this , we simply printed the solution of the n unknowns.
-----------------------------------------------------------------------------------------------------------------------------------------------------------5. Runge - Kutta(RK4) Method:
+.
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+5. Runge - Kutta(RK4) Method:
 
 1-> At first the "void solveDifferentialEquation()" method takes the input from the user(initial value of x, intital value of y , step size and last value of x).
 
@@ -58,8 +68,8 @@ After this , we simply printed the solution of the n unknowns.
 4-> The algorithm uses the method "double rk4(double x0, double y0, double xEnd, double h, function<double(double, double)> &f)" to solve the specific equations. It calculates the value of k1,k2,k3,k4 and y using the Runge-Kutta formula. After this , it adds the step size to the value of x.When the value of x becomes greater than the termination taken from user , the loop terminated and prints the output (that is value of y).
 
 
-
 _________________________________________________________________________________________________________________________
+__________________________________________________________________________________________________________________________
 
                                    2)  Aziz Khan
                                      Roll: 2107034
@@ -83,8 +93,10 @@ Verification:
 . To verify A*A_inv, the algorithm computes A*A_inv and compares each entry to the identity matrix.
 
 Return results:
+
 . If successful, the inverse matrix A_inv and the determinant are returned.
 . If failed, an error message is returned.
+
 
 _________________________________________________________________________________________________________________________
 
