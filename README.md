@@ -95,24 +95,22 @@ ________________________________________________________________________________
 
 Initialization:
 
-.The size of A(number of rows) is determined. An identity matrix of the same size is created to store the inverse of A as it's built through operations.
-. The determinant is initialized to 1, and it will be updated as the algorithm proceeds.
+. An identity matrix is given priority over row echelon form to determine the inverse matrix since compression in the matrix linearity over the original matrix is avoided.
+. The determinant will be initialized to 1 so that it is kept for later reference when it comes to judging the invertibility of the original matrix.
 
 Gauss-Jordan elimination:
-. For each column, the algorithm tries to make the diagonal entry(pivot) equal to 1 by dividing the entire row by this pivot value.
-. If the pivot is zero, the algorithm checks if row swap can be done with a row below it. This row swap ensures a non-zero pivot and if no non-zero row can be found by row swapping, the matrix is singular(non-invertible) and the algorithm terminates.
-. The pivot value is multiplied into the determinant at each step. If the determinant reaches zero, the matrix is singular, and the algorithm terminates.
-. Once the pivot is non-zero, the algorithm divides each element in the row(in both A and the identity matrix used for A_inv) by the pivot to make the diagonal entry 1.
-. For each row, the algorithm subtracts multiples of the pivot row to amke all other entries in the current column zero, ensuring he column forms a unit vector with a single 1 in the diagonal.
+. The main objective is to coalesce(enhance) the factorization in matrix multiplication between an original matrix and the result of inverse matrix to an identity matrix when it comes to verify the inverse production of any matrix.
+. The row swap concludes the echelon formation along each column, since it ensures the completion of submissive trials in zero placement as its dominance engulfs the upper triangular portion as well as the lower triangular portion of any copy of the original matrix.
+. The matrix determinant lists the benchmark of any matrix property as it checks whether matrix is singular or non-invertible.
+. For each row, the pivot produces a turning point along each row which can be used as reference point to generate diagonal elements of some constant which will further be terminated into a single 1. Sidewise, through each step column, the change is seen and then the reference point acts as 
 
 Verification: 
-. After transforming A into an identity matrix, the modified identity matrix A_inv should be the inverse of A.
-. To verify A*A_inv, the algorithm computes A*A_inv and compares each entry to the identity matrix.
+. We have to keep in mind that determinant neither depreciates the proper transfer of original matrix to an inverse matrix, so we keep a copy of the original matrix as it is the showstopper. 
+. A complete traversal in the edging portions of the original matrix creates a buffer so that we can check and compensate for any unusual behaviour in inverse matrix deviating from the usual matrix property of a determinant. For example, a 2*2 matrix produces a determinant whatsever but that doesn't mean it is invertible.
 
 Return results:
-
-. If successful, the inverse matrix A_inv and the determinant are returned.
-. If failed, an error message is returned.
+. An inverse matrix of the original matrix is offered along with the value of determinant.
+. We will get error message if not invertible.
 
 
 _________________________________________________________________________________________________________________________
