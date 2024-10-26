@@ -1,113 +1,125 @@
-#ifndef FALSE_POSITION_FP_H
-#define FALSE_POSITION_FP_H
+#ifndef FALSE_POSITION_METHOD_H
+#define FALSE_POSITION_METHOD_H
 
 #include <bits/stdc++.h>
+
 using namespace std;
 
-const double TOLERANCE_FP = 1e-6;
-const int MAX_ITERATIONS_FP = 100;
+double TOLERANCE_false_position = 1e-6;
+int degree_false_position;
+vector<double> coeffs_false_position;
 
-int degree_fp;
-vector<double> coeffs_fp;
-double interval_start_fp;
-double interval_end_fp;
-
-void get_inputs_fp()
-{
-    cout << "Enter the highest power of x: ";
-    cin >> degree_fp;
-    coeffs_fp.resize(degree_fp + 1);
-
-    cout << "Enter the coefficients (from highest degree to lowest): ";
-    for (int i = 0; i <= degree_fp; i++)
-    {
-        cin >> coeffs_fp[i];
-    }
-
-    cout << "Enter the interval (start end): ";
-    cin >> interval_start_fp >> interval_end_fp;
-}
-
-double evaluate_fp(double x)
+double evaluate_false_position(double x)
 {
     double result = 0.0;
-    for (int i = 0; i <= degree_fp; i++)
+    int degree = coeffs_false_position.size() - 1;
+    for (int i = 0; i <= degree; ++i)
     {
-        result += coeffs_fp[i] * pow(x, degree_fp - i);
+        result += coeffs_false_position[i] * pow(x, degree - i);
     }
     return result;
 }
 
-bool is_root_fp(double x)
+double findRootFalsePosition(double a, double b, const vector<double> &coefficients, double epsilon, int max_iterations)
 {
-    return abs(evaluate_fp(x)) < TOLERANCE_FP;
-}
+    double f_a = evaluate_false_position(a);
+    double f_b = evaluate_false_position(b);
 
-double false_position_fp(double a, double b)
-{
-    double c = a;
-    for (int i = 0; i < MAX_ITERATIONS_FP; i++)
+    if (f_a * f_b > 0)
     {
-        double fa = evaluate_fp(a);
-        double fb = evaluate_fp(b);
-        c = (a * fb - b * fa) / (fb - fa);
-        double fc = evaluate_fp(c);
+        return NAN;
+    }
 
-        if (is_root_fp(c))
+    double c;
+    int iteration = 0;
+    while (fabs(b - a) > epsilon && iteration < max_iterations)
+    {
+        c = (a * f_b - b * f_a) / (f_b - f_a);
+        double f_c = evaluate_false_position(c);
+
+        if (fabs(f_c) < epsilon)
         {
             return c;
         }
 
-        if (fa * fc < 0)
+        if (f_a * f_c < 0)
         {
             b = c;
+            f_b = f_c;
         }
         else
         {
             a = c;
+            f_a = f_c;
         }
-
-        if (abs(b - a) < TOLERANCE_FP)
-        {
-            return c;
-        }
-    }
-    return c;
-}
-
-void find_roots_fp()
-{
-    vector<double> roots_fp;
-    double step_fp = 0.1;
-
-    for (double x = interval_start_fp; x < interval_end_fp; x += step_fp)
-    {
-        double a = x;
-        double b = x + step_fp;
-
-        if (evaluate_fp(a) * evaluate_fp(b) < 0)
-        {
-            double root = false_position_fp(a, b);
-
-            if (roots_fp.empty() || abs(root - roots_fp.back()) >= TOLERANCE_FP)
-            {
-                roots_fp.push_back(root);
-            }
-        }
+        iteration++;
     }
 
-    cout << "Roots found in the interval [" << interval_start_fp << ", " << interval_end_fp << "]:\n";
-    for (double root : roots_fp)
-    {
-        cout << fixed << setprecision(3) << root << " ";
-    }
-    cout << endl;
+    return (a + b) / 2;
 }
 
 void false_position()
 {
-    get_inputs_fp();
-    find_roots_fp();
+    cout << "Enter the degree (power) of the polynomial: ";
+    cin >> degree_false_position;
+    coeffs_false_position.resize(degree_false_position + 1);
+
+    cout << "Enter the coefficients (highest to lowest degree): ";
+    for (int i = 0; i <= degree_false_position; i++)
+    {
+        cin >> coeffs_false_position[i];
+    }
+
+    double epsilon = 1e-6;
+    int max_iterations = 1000;
+    vector<double> roots;
+
+    double a_n = coeffs_false_position[0];
+    double a_n_minus_1 = (degree_false_position >= 1) ? coeffs_false_position[1] : 0;
+    double x_max = abs(-a_n_minus_1 / a_n);
+
+    double interval_limit = x_max;
+    if (degree_false_position >= 2)
+    {
+        double a_n_minus_2 = coeffs_false_position[2];
+        interval_limit = sqrt(pow(a_n_minus_1 / a_n, 2) - 2 * (a_n_minus_2 / a_n));
+    }
+
+    double lower_bound = -interval_limit;
+    double upper_bound = interval_limit;
+
+    int num_subintervals = 200;
+    double step = (upper_bound - lower_bound) / num_subintervals;
+
+    for (int i = 0; i < num_subintervals; ++i)
+    {
+        double a = lower_bound + i * step;
+        double b = a + step;
+
+        double root = findRootFalsePosition(a, b, coeffs_false_position, epsilon, max_iterations);
+        if (!isnan(root))
+        {
+            bool is_repeated = false;
+            for (const double &r : roots)
+            {
+                if (fabs(r - root) < epsilon)
+                {
+                    is_repeated = true;
+                    break;
+                }
+            }
+            if (!is_repeated)
+            {
+                roots.push_back(root);
+            }
+        }
+    }
+
+    cout << "Roots found using False Position Method:\n";
+    for (const auto &root : roots)
+    {
+        cout << fixed << setprecision(6) << root << endl;
+    }
 }
 
 #endif
