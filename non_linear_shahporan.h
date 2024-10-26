@@ -9,6 +9,7 @@ using namespace std;
 int non_linear() {
 int method;
     cout << "Select the method to use:\n1. Bisection\n2. False Position\n3. Secant\n4. Newton-Raphson\n";
+    cout<<"Give Number (1-4): "<<endl;
     cin >> method;
 
     switch (method) {
