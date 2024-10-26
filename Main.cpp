@@ -7,6 +7,7 @@
 using namespace std;
 int main()
 {
+    cout<<"Numercal Methods Laboratory Assignment"<<endl<<"Group No- 30"<<endl<<endl;
     while (1)
     {
         cout << "1.Solve Linear equations: " << endl;
@@ -34,6 +35,17 @@ int main()
             break;
         default:
             cout << "Invalid selection!" << endl;
+        }
+        cout<<"Do you want to solve more(y/n)?:  ";
+        char ch; cin>>ch;
+        if(ch=='n' || ch=='N')
+        {
+            cout<<"You are successfully Exited from the application.."<<endl;
+            break;
+        }
+        else
+        {
+            continue;
         }
     }
 }
