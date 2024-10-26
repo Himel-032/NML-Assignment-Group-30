@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 #include "SolveLinearBy_Himel.h"
 #include "RK4_Himel.h"
-#include "non_linear.h"
+#include "non_linear_shahporan.h"
 #include "MatrixInversion.h"
 
 using namespace std;
