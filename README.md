@@ -75,7 +75,7 @@ After this , we simply printed the solution of the n unknowns.
 
 1-> The "void LUFactorization()" method take inputs from the user.At first it take the number of unknowns(n) of the system of linear equations.Then it takes the coefficients matrix (A) from the user and the constants matrix (b) from the user.Then the algorithm call the "void LU_Factorization( vector<vector<double>> &A, vector<vector<double>> &L, vector<vector<double>> &U)" method.
 
-2-> In the "void LU_Factorization( vector<vector<double>> &A, vector<vector<double>> &L, vector<vector<double>> &U)" method the algorithm decomposes the A vector(coefficients matrix) int two matrix L(lower triangular matrix),U (upper triangular matrix) such that LU=A. The diagonal element of L is set to 1.And others elements are calculated .
+2-> In the "void LU_Factorization( vector<vector<double>> &A, vector<vector<double>> &L, vector<vector<double>> &U)" method the algorithm decomposes the A vector(coefficients matrix) int two matrix L(lower triangular matrix),U (upper triangular matrix) such that LU=A. The diagonal element of L is set to 1.And others elements are calculated.
 
 3-> Then the algorithm calls "vector<double> forward_substitution( vector<vector<double>> &L,  vector<double> &b)" method to solve for Ly=b using forward substitution technique.After finding the solutions for y, the program execution gets back to the "void LUFactorization()" method.
 
