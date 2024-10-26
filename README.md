@@ -33,9 +33,8 @@ The fraction "frac" represents how much of the pivot row we need to subtract fro
 
 3-> I also check the consistency of the augmented matrix using the function (int checkConsistency(vector<vector<double>> &coefficients)). If the matrix is not consistent , then there can be no solution or infinite solutions. if the sum any entire row including the constant is zero, there are infinte solutions. or if all the elements are zero except the constant term in a same row, then there is no solution. 
 
-4-> When it is sure that there is a unique solution, i used the method (void Backsubstitution(vector<vector<double>> &coefficients)) to get the answer.
-At first , i get the solution of last variable, then i substitute this value in the upwards direction to get all the solutions.
-Then the solution is printed.
+
+.
 -------------------------------------------------------------------------------------------------------------
 4. Gauss-Jordan Elimination:
 
