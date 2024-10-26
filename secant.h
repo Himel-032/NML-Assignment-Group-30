@@ -1,119 +1,125 @@
-#ifndef SECANT_SC_H
-#define SECANT_SC_H
+#ifndef SECANT_H
+#define SECANT_H
 
 #include <bits/stdc++.h>
 using namespace std;
 
-const double TOLERANCE_SC = 1e-6;
-const int MAX_ITERATIONS_SC = 100;
-
-int degree_sc;
-vector<double> coeffs_sc;
-double interval_start_sc;
-double interval_end_sc;
-
-void get_inputs_sc()
-{
-    cout << "Enter the highest power of x: ";
-    cin >> degree_sc;
-    coeffs_sc.resize(degree_sc + 1);
-
-    cout << "Enter the coefficients (from highest degree to lowest): ";
-    for (int i = 0; i <= degree_sc; i++)
-    {
-        cin >> coeffs_sc[i];
-    }
-
-    cout << "Enter the interval (start end): ";
-    cin >> interval_start_sc >> interval_end_sc;
-}
-
-double evaluate_sc(double x)
+double polynomial(double x, const vector<double> &coefficients)
 {
     double result = 0.0;
-    for (int i = 0; i <= degree_sc; i++)
+    int degree = coefficients.size() - 1;
+    for (int i = 0; i <= degree; ++i)
     {
-        result += coeffs_sc[i] * pow(x, degree_sc - i);
+        result += coefficients[i] * pow(x, degree - i);
     }
     return result;
 }
 
-bool is_root_sc(double x)
+double findRootInInterval(double x0, double x1, const vector<double> &coefficients, double epsilon, int max_iterations)
 {
-    return abs(evaluate_sc(x)) < TOLERANCE_SC;
-}
+    double f_x0 = polynomial(x0, coefficients);
+    double f_x1 = polynomial(x1, coefficients);
 
-double secant_method_sc(double x0, double x1)
-{
-    for (int i = 0; i < MAX_ITERATIONS_SC; i++)
+    int iteration = 0;
+    double x2;
+
+    while (iteration < max_iterations)
     {
-        double f_x0 = evaluate_sc(x0);
-        double f_x1 = evaluate_sc(x1);
+        if (fabs(f_x1 - f_x0) < epsilon)
+        {
+            return NAN;
+        }
 
-        if (abs(f_x1 - f_x0) < TOLERANCE_SC)
-            break;
+        x2 = x1 - f_x1 * (x1 - x0) / (f_x1 - f_x0);
+        double f_x2 = polynomial(x2, coefficients);
 
-        double x2 = x1 - f_x1 * (x1 - x0) / (f_x1 - f_x0);
-
-        if (is_root_sc(x2))
+        if (fabs(f_x2) < epsilon)
         {
             return x2;
         }
 
         x0 = x1;
+        f_x0 = f_x1;
         x1 = x2;
+        f_x1 = f_x2;
 
-        if (abs(x1 - x0) < TOLERANCE_SC)
-        {
-            return x2;
-        }
-    }
-    return x1;
-}
-
-void find_roots_sc()
-{
-    vector<double> roots_sc;
-    double step_sc = 0.01;
-
-    for (double x = interval_start_sc; x < interval_end_sc; x += step_sc)
-    {
-        double x0 = x;
-        double x1 = x + step_sc;
-
-        if (evaluate_sc(x0) * evaluate_sc(x1) < 0)
-        {
-            double root = secant_method_sc(x0, x1);
-
-            bool isUnique = true;
-            for (double r : roots_sc)
-            {
-                if (abs(root - r) < TOLERANCE_SC)
-                {
-                    isUnique = false;
-                    break;
-                }
-            }
-
-            if (isUnique)
-            {
-                roots_sc.push_back(root);
-            }
-        }
+        iteration++;
     }
 
-    cout << "Roots found in the interval [" << interval_start_sc << ", " << interval_end_sc << "]:\n";
-    for (double root : roots_sc)
-    {
-        cout << fixed << setprecision(3) << root << " ";
-    }
-    cout << endl;
+    return x2;
 }
 
 void secant()
 {
-    get_inputs_sc();
-    find_roots_sc();
+    int power;
+    cout << "Enter the degree (power) of the polynomial: ";
+    cin >> power;
+
+    vector<double> coefficients(power + 1);
+    cout << "Enter the coefficients (highest to lowest degree): ";
+    for (int i = 0; i <= power; ++i)
+    {
+        cin >> coefficients[i];
+    }
+
+    double epsilon = 1e-6;
+    int max_iterations = 1000;
+    vector<double> roots;
+
+    double a_n = coefficients[0];
+    double a_n_minus_1 = (power >= 1) ? coefficients[1] : 0;
+    double x_max = abs(-a_n_minus_1 / a_n);
+
+    double interval_limit = x_max;
+    if (power >= 2)
+    {
+        double a_n_minus_2 = coefficients[2];
+        interval_limit = sqrt(pow(a_n_minus_1 / a_n, 2) - 2 * (a_n_minus_2 / a_n));
+    }
+
+    double lower_bound = -interval_limit;
+    double upper_bound = interval_limit;
+
+    int num_subintervals = 100;
+    double step = (upper_bound - lower_bound) / num_subintervals;
+
+    for (int i = 0; i < num_subintervals; ++i)
+    {
+        double x0 = lower_bound + i * step;
+        double x1 = x0 + step;
+
+        double root = findRootInInterval(x0, x1, coefficients, epsilon, max_iterations);
+
+        if (!isnan(root))
+        {
+            roots.push_back(root);
+        }
+    }
+
+    set<double> uniqueRoots;
+    for (const auto &root : roots)
+    {
+        bool foundClose = false;
+        for (const auto &uniqueRoot : uniqueRoots)
+        {
+            if (fabs(root - uniqueRoot) < 0.1)
+            {
+                foundClose = true;
+                break;
+            }
+        }
+        if (!foundClose)
+        {
+            uniqueRoots.insert(root);
+        }
+    }
+
+    cout << fixed << setprecision(4);
+    cout << "Approximate roots of the polynomial are:\n";
+    for (const auto &root : uniqueRoots)
+    {
+        cout << root << endl;
+    }
 }
 
 #endif
