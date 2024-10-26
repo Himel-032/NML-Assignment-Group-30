@@ -1,128 +1,101 @@
-#ifndef SECANT_H
-#define SECANT_H
+#ifndef SECANT_SC_H
+#define SECANT_SC_H
 
-#include <vector>
-#include <cmath>
-#include <iostream>
-#include <set>
-#include <iomanip>
-
+#include <bits/stdc++.h>
 using namespace std;
 
-double evaluate_secant(const vector<double> &coeffs, double x)
-{
+const double TOLERANCE_SC = 1e-6;
+const int MAX_ITERATIONS_SC = 100;
+
+int degree_sc;
+vector<double> coeffs_sc;
+double interval_start_sc;
+double interval_end_sc;
+
+void get_inputs_sc() {
+    cout << "Enter the highest power of x: ";
+    cin >> degree_sc;
+    coeffs_sc.resize(degree_sc + 1);
+
+    cout << "Enter the coefficients (from highest degree to lowest): ";
+    for (int i = 0; i <= degree_sc; i++) {
+        cin >> coeffs_sc[i];
+    }
+
+    cout << "Enter the interval (start end): ";
+    cin >> interval_start_sc >> interval_end_sc;
+}
+
+double evaluate_sc(double x) {
     double result = 0.0;
-    int degree = coeffs.size() - 1;
-    for (int i = 0; i <= degree; ++i)
-    {
-        result += coeffs[i] * pow(x, degree - i);
+    for (int i = 0; i <= degree_sc; i++) {
+        result += coeffs_sc[i] * pow(x, degree_sc - i);
     }
     return result;
 }
 
-double secantMethod(const vector<double> &coeffs, double x0, double x1, double tol, int max_iter = 100)
-{
-    double x2;
+bool is_root_sc(double x) {
+    return abs(evaluate_sc(x)) < TOLERANCE_SC;
+}
 
-    for (int iter = 0; iter < max_iter; ++iter)
-    {
-        double f0 = evaluate_secant(coeffs, x0);
-        double f1 = evaluate_secant(coeffs, x1);
+double secant_method_sc(double x0, double x1) {
+    for (int i = 0; i < MAX_ITERATIONS_SC; i++) {
+        double f_x0 = evaluate_sc(x0);
+        double f_x1 = evaluate_sc(x1);
 
-        if (fabs(f1 - f0) < 1e-10)
-        {
-            cout << "Warning: Small denominator in secant method. Adjust your initial guesses." << endl;
-            return x1;
-        }
+        if (abs(f_x1 - f_x0) < TOLERANCE_SC) break;
 
-        x2 = x1 - f1 * (x1 - x0) / (f1 - f0);
+        double x2 = x1 - f_x1 * (x1 - x0) / (f_x1 - f_x0);
 
-        if (fabs(x2 - x1) < tol)
-        {
+        if (is_root_sc(x2)) {
             return x2;
         }
 
         x0 = x1;
         x1 = x2;
-    }
 
-    cout << "Warning: Secant method did not converge within the maximum number of iterations." << endl;
+        if (abs(x1 - x0) < TOLERANCE_SC) {
+            return x2;
+        }
+    }
     return x1;
 }
 
-void secant()
-{
-    int degree;
-    cout << "Enter the degree of the polynomial: ";
-    cin >> degree;
+void find_roots_sc() {
+    vector<double> roots_sc;
+    double step_sc = 0.01;
 
-    degree++;
+    for (double x = interval_start_sc; x < interval_end_sc; x += step_sc) {
+        double x0 = x;
+        double x1 = x + step_sc;
 
-    vector<double> coeffs(degree);
-    cout << "Enter the coefficients of the polynomial from highest degree to lowest (constant last):" << endl;
-    for (int i = 0; i < degree; ++i)
-    {
-        cin >> coeffs[i];
-    }
+        if (evaluate_sc(x0) * evaluate_sc(x1) < 0) {
+            double root = secant_method_sc(x0, x1);
 
-    double tol = 0.0001;
+            bool isUnique = true;
+            for (double r : roots_sc) {
+                if (abs(root - r) < TOLERANCE_SC) {
+                    isUnique = false;
+                    break;
+                }
+            }
 
-    char choice;
-    cout << "Do you want to set a custom tolerance (y/n)? ";
-    cin >> choice;
-
-    if (choice == 'y' || choice == 'Y')
-    {
-        cout << "Enter the tolerance (error threshold): ";
-        cin >> tol;
-    }
-
-    int numIntervals;
-    cout << "Enter the number of intervals you want to search for roots: ";
-    cin >> numIntervals;
-
-    set<double> roots;
-
-    for (int i = 0; i < numIntervals; ++i)
-    {
-        double x0, x1;
-        cout << "Enter two initial guesses for interval " << i + 1 << " (e.g., x0 x1): ";
-        cin >> x0 >> x1;
-
-        double f0 = evaluate_secant(coeffs, x0);
-        double f1 = evaluate_secant(coeffs, x1);
-
-        if (fabs(f0) < tol)
-        {
-            roots.insert(x0);
-            cout << "Root found at endpoint: " << fixed << setprecision(4) << x0 << endl;
-            continue;
-        }
-
-        if (fabs(f1) < tol)
-        {
-            roots.insert(x1);
-            cout << "Root found at endpoint: " << fixed << setprecision(4) << x1 << endl;
-            continue;
-        }
-
-        double root = secantMethod(coeffs, x0, x1, tol);
-        roots.insert(root);
-        cout << "Root found in the interval (" << x0 << ", " << x1 << "): " << fixed << setprecision(4) << root << endl;
-    }
-
-    if (roots.empty())
-    {
-        cout << "No roots found in the specified intervals." << endl;
-    }
-    else
-    {
-        cout << "Roots found:" << endl;
-        for (double root : roots)
-        {
-            cout << fixed << setprecision(4) << root << endl;
+            if (isUnique) {
+                roots_sc.push_back(root);
+            }
         }
     }
+
+    cout << "Roots found in the interval [" << interval_start_sc << ", " << interval_end_sc << "]:\n";
+    for (double root : roots_sc) {
+        cout << fixed << setprecision(3) << root << " ";
+    }
+    cout << endl;
+}
+
+void secant() {
+    get_inputs_sc();
+    find_roots_sc();
 }
 
 #endif
