@@ -69,6 +69,19 @@ After this , we simply printed the solution of the n unknowns.
 
 4-> The algorithm uses the method "double rk4(double x0, double y0, double xEnd, double h, function<double(double, double)> &f)" to solve the specific equations. It calculates the value of k1,k2,k3,k4 and y using the Runge-Kutta formula. After this , it adds the step size to the value of x.When the value of x becomes greater than the termination taken from user , the loop terminated and prints the output (that is value of y).
 
+---------------------------------------------------------------------------------------------------------------------------
+## 6. LU Factorization Method:
+
+1-> The "void LUFactorization()" method take inputs from the user.At first it take the number of unknowns(n) of the system of linear equations.Then it takes the coefficients matrix (A) from the user and the constants matrix (b) from the user.Then the algorithm call the "void LU_Factorization( vector<vector<double>> &A, vector<vector<double>> &L, vector<vector<double>> &U)" method.
+
+2-> In the "void LU_Factorization( vector<vector<double>> &A, vector<vector<double>> &L, vector<vector<double>> &U)" method the algorithm decomposes the A vector(coefficients matrix) int two matrix L(lower triangular matrix),U (upper triangular matrix) such that LU=A. The diagonal element of L is set to 1.And others elements are calculated .
+
+3-> Then the algorithm calls "vector<double> forward_substitution( vector<vector<double>> &L,  vector<double> &b)" method to solve for Ly=b using forward substitution technique.After finding the solutions for y, the program execution gets back to the "void LUFactorization()" method.
+
+4-> Then the algorithm calls "vector<double> backward_substitution( vector<vector<double>> &U,  vector<double> &y)" method to solve Ux=y for the solutions of x using the backsubstitution technique.After finding the values of x , the execution gets back to "void LUFactorization()" method.
+
+5-> After this the program prints the results.
+
 
 _________________________________________________________________________________________________________________________
 __________________________________________________________________________________________________________________________
