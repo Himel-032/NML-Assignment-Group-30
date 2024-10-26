@@ -1,88 +1,103 @@
 #ifndef BISECTION_H
 #define BISECTION_H
 
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
+
 using namespace std;
 
-const double TOLERANCE = 1e-6;
-
-int d;
-vector<double> coeffs_bisec;
-double intervalStart;
-double intervalEnd;
-
-void get_inputs_false() {
-    cout << "Enter the highest power of x: ";
-    cin >> d;
-    coeffs_bisec.resize(d + 1);
-
-    cout << "Enter the coefficients (from highest degree to lowest): ";
-    for (int i = 0; i <= d; i++) {
-        cin >> coeffs_bisec[i];
-    }
-
-    cout << "Enter the interval (start end): ";
-    cin >> intervalStart >> intervalEnd;
-}
-
-double evaluate_bisection(double x) {
+double polynomial_bs(double x, const vector<double>& coefficients) {
     double result = 0.0;
-    for (int i = 0; i <= d; i++) {
-        result += coeffs_bisec[i] * pow(x, d - i);
+    int degree = coefficients.size() - 1;
+    for (int i = 0; i <= degree; ++i) {
+        result += coefficients[i] * pow(x, degree - i);
     }
     return result;
 }
 
-bool is_root_false(double x) {
-    return abs(evaluate_bisection(x)) < TOLERANCE;
-}
+double find_Root_InInterval(double a, double b, const vector<double>& coefficients, double epsilon, int max_iterations) {
+    double f_a = polynomial_bs(a, coefficients);
+    double f_b = polynomial_bs(b, coefficients);
 
-double bisection(double a, double b) {
-    double mid;
-    while ((b - a) >= TOLERANCE) {
-        mid = (a + b) / 2.0;
-        double f_mid = evaluate_bisection(mid);
-
-        if (is_root_false(mid)) {
-            return mid;
-        }
-
-        if (evaluate_bisection(a) * f_mid < 0) {
-            b = mid;
-        } else {
-            a = mid;
-        }
+    if (f_a * f_b > 0) {
+        return NAN; 
     }
-    return mid;
+
+    int iteration = 0;
+    double c;
+    while (fabs(b - a) > epsilon && iteration < max_iterations) {
+        c = (a + b) / 2;
+        double f_c = polynomial_bs(c, coefficients);
+
+        if (fabs(f_c) < epsilon) {
+            return c; 
+        }
+
+        if (f_a * f_c < 0) {
+            b = c;
+        } else {
+            a = c;
+            f_a = f_c;
+        }
+        iteration++;
+    }
+
+    return (a + b) / 2; 
 }
 
-void find_roots_false() {
-    vector<double> roots;
-    double step = 0.1;
+void bisection() {
+    int power;
+    cout << "Enter the degree (power) of the polynomial: ";
+    cin >> power;
 
-    for (double x = intervalStart; x < intervalEnd; x += step) {
-        double a = x;
-        double b = x + step;
+    vector<double> coefficients(power + 1);
+    cout << "Enter the coefficients (highest to lowest degree): ";
+    for (int i = 0; i <= power; ++i) {
+        cin >> coefficients[i];
+    }
 
-        if (evaluate_bisection(a) * evaluate_bisection(b) < 0) {
-            double root = bisection(a, b);
+    double epsilon = 1e-6;  
+    int max_iterations = 1000; 
+    vector<double> roots; 
 
-            if (roots.empty() || abs(root - roots.back()) >= TOLERANCE) {
-                roots.push_back(root);
+    double a_n = coefficients[0];
+    double a_n_minus_1 = (power >= 1) ? coefficients[1] : 0;
+    double x_max = abs(-a_n_minus_1 / a_n);
+
+    double interval_limit = x_max;
+    if (power >= 2) {
+        double a_n_minus_2 = coefficients[2];
+        interval_limit = sqrt(pow(a_n_minus_1 / a_n, 2) - 2 * (a_n_minus_2 / a_n));
+    }
+
+    double lower_bound = -interval_limit;
+    double upper_bound = interval_limit;
+
+    int num_subintervals = 200; 
+    double step = (upper_bound - lower_bound) / num_subintervals;
+
+    for (int i = 0; i < num_subintervals; ++i) {
+        double a = lower_bound + i * step;
+        double b = a + step;
+
+        double root = find_Root_InInterval(a, b, coefficients, epsilon, max_iterations);
+        if (!isnan(root)) { 
+            bool is_repeated = false;
+            for (const double& r : roots) {
+                if (fabs(r - root) < epsilon) {
+                    is_repeated = true;
+                    break;
+                }
+            }
+            if (!is_repeated) {
+                roots.push_back(root); 
             }
         }
     }
 
-    cout << "Roots found in the interval [" << intervalStart << ", " << intervalEnd << "]:\n";
-    for (double root : roots) {
-        cout << fixed << setprecision(3) << root << " ";
+    cout << "Approximate roots of the polynomial are:\n";
+    for (const auto& root : roots) {
+        cout << root << endl;
     }
-    cout << endl;
 }
 
-void bisection() {
-    get_inputs_false();
-    find_roots_false();
-}
-
-#endif // BISECTION_H
+#endif 
