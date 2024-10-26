@@ -1,145 +1,105 @@
-// #ifndef BISECTION_H
+#ifndef BISECTION_H
 #define BISECTION_H
 
-#include <vector>
-#include <cmath>
-#include <iostream>
-#include <set>
-#include <iomanip>
-
+#include <bits/stdc++.h>
 using namespace std;
 
-double evaluate(const vector<double> &coeffs, double x)
+const double TOLERANCE = 1e-6;
+
+int d;
+vector<double> coeffs_bisec;
+double intervalStart;
+double intervalEnd;
+
+void get_inputs_false()
+{
+    cout << "Enter the highest power of x: ";
+    cin >> d;
+    coeffs_bisec.resize(d + 1);
+
+    cout << "Enter the coefficients (from highest degree to lowest): ";
+    for (int i = 0; i <= d; i++)
+    {
+        cin >> coeffs_bisec[i];
+    }
+
+    cout << "Enter the interval (start end): ";
+    cin >> intervalStart >> intervalEnd;
+}
+
+double evaluate_bisection(double x)
 {
     double result = 0.0;
-    int degree = coeffs.size() - 1;
-    for (int i = 0; i <= degree; ++i)
+    for (int i = 0; i <= d; i++)
     {
-        result += coeffs[i] * pow(x, degree - i);
+        result += coeffs_bisec[i] * pow(x, d - i);
     }
     return result;
 }
 
-double bisectionSingleRoot(const vector<double> &coeffs, double a, double b, double tol)
+bool is_root_false(double x)
 {
-    double c = a;
-    while ((b - a) >= tol)
-    {
-        c = (a + b) / 2;
+    return abs(evaluate_bisection(x)) < TOLERANCE;
+}
 
-        if (fabs(evaluate(coeffs, c)) < tol)
+double bisection(double a, double b)
+{
+    double mid;
+    while ((b - a) >= TOLERANCE)
+    {
+        mid = (a + b) / 2.0;
+        double f_mid = evaluate_bisection(mid);
+
+        if (is_root_false(mid))
         {
-            return c;
+            return mid;
         }
 
-        if (evaluate(coeffs, c) * evaluate(coeffs, a) < 0)
+        if (evaluate_bisection(a) * f_mid < 0)
         {
-            b = c;
+            b = mid;
         }
         else
         {
-            a = c;
+            a = mid;
         }
     }
-
-    return c;
+    return mid;
 }
 
-void findRootsInInterval(const vector<double> &coeffs, double a, double b, double tol, set<double> &roots)
+void find_roots_false()
 {
-    double fa = evaluate(coeffs, a);
-    double fb = evaluate(coeffs, b);
+    vector<double> roots;
+    double step = 0.1;
 
-    if (fabs(fa) < tol)
+    for (double x = intervalStart; x < intervalEnd; x += step)
     {
-        roots.insert(a);
-    }
-    if (fabs(fb) < tol)
-    {
-        roots.insert(b);
-    }
+        double a = x;
+        double b = x + step;
 
-    if (fa * fb < 0)
-    {
-        double root = bisectionSingleRoot(coeffs, a, b, tol);
-
-        bool isNewRoot = true;
-        for (double knownRoot : roots)
+        if (evaluate_bisection(a) * evaluate_bisection(b) < 0)
         {
-            if (fabs(knownRoot - root) < tol)
-            {
-                isNewRoot = false;
-                break;
-            }
-        }
+            double root = bisection(a, b);
 
-        if (isNewRoot)
-        {
-            roots.insert(root);
-
-            double delta = tol * 10;
-
-            if (root - a > delta)
+            if (roots.empty() || abs(root - roots.back()) >= TOLERANCE)
             {
-                findRootsInInterval(coeffs, a, root - delta, tol, roots);
-            }
-            if (b - root > delta)
-            {
-                findRootsInInterval(coeffs, root + delta, b, tol, roots);
+                roots.push_back(root);
             }
         }
     }
+
+    cout << "Roots found in the interval [" << intervalStart << ", " << intervalEnd << "]:\n";
+    for (double root : roots)
+    {
+        cout << fixed << setprecision(3) << root << " ";
+    }
+    cout << endl;
 }
 
 void bisection()
 {
-    int degree;
-    cout << "Enter the degree of the polynomial: ";
-    cin >> degree;
-
-    degree++;
-
-    vector<double> coeffs(degree);
-    cout << "Enter the coefficients of the polynomial from highest degree to lowest (constant last):" << endl;
-    for (int i = 0; i < degree; ++i)
-    {
-        cin >> coeffs[i];
-    }
-
-    double tol = 0.0001;
-    char choice;
-    cout << "Do you want to set a custom tolerance (y/n)? ";
-    cin >> choice;
-    if (choice == 'y' || choice == 'Y')
-    {
-        cout << "Enter the tolerance (error threshold): ";
-        cin >> tol;
-    }
-
-    int numIntervals;
-    cout << "Enter the number of intervals you want to search for roots: ";
-    cin >> numIntervals;
-
-    set<double> roots;
-    for (int i = 0; i < numIntervals; ++i)
-    {
-        double a, b;
-        cout << "Enter interval " << i + 1 << " (e.g., -10 10): ";
-        cin >> a >> b;
-
-        findRootsInInterval(coeffs, a, b, tol, roots);
-    }
-
-    if (roots.empty())
-    {
-        cout << "No roots found in the specified intervals." << endl;
-    }
-    else
-    {
-        cout << "Roots found:" << endl;
-        for (double root : roots)
-        {
-            cout << fixed << setprecision(4) << root << endl;
-        }
-    }
+    get_inputs_false();
+    find_roots_false();
 }
+
+#endif // BISECTION_H
