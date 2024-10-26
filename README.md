@@ -1,3 +1,6 @@
+Abdullah Md. Shahporan
+Roll: 2107056
+
 Solving Non-Linear Equation:
 1.	Bisection Method: It’s a method for solving non linear equation in an iterative approach. If a polynomial equation is 
      F(x)=anxn+a n-1 xn-1+…+a1x+a0=0
