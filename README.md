@@ -1,12 +1,14 @@
-## Numerical Methods Laboratory Assignment -Group - 30
+# Numerical Methods Laboratory Assignment -Group - 30
 ## contributors
 
 ## Md Himel(2107032) , Md Shahriar Aziz Khan(2107034) , Abdullah Md. Shahporan(2107056)
                                                                        
-____________________________________________________________________________________________________________________________________________________________________
-## Md Himel(2107032):
+______________________________________________________________________________________                                      Md Himel
+                                    Roll:2107032
+_____________________________________________________________________________
+# Md Himel(2107032):
 
-# 1.Jacobi Iteration Method: 
+## 1.Jacobi Iteration Method: 
 
 1-> At first, the algorithm receives inputs form the user as an augmented matrix form.
 
@@ -19,14 +21,14 @@ ________________________________________________________________________________
 5-> If the coefficient matrix is not diagonally dominant , i tried to make it diagonally dominant using the function (bool makeDiagonallyDominant(vector<vector<double>> & coefficients,int n)) . If it was not possible to make the coefficient matrix digonally dominant , i simply showed a message and exited from the solution method.
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------
-# 2. Gauss seidel iterative Method:
+## 2. Gauss seidel iterative Method:
 
 1-> In Gauss-Seidel method , i used the methods "bool isDiagonallyDominant(vector<vector<double>> & coefficients,int n),bool makeDiagonallyDominant(vector<vector<double>> & coefficients,int n),double calculateSolution(vector<vector<double>> &coefficients, vector<double> &currValues, int i, int n)" from "JacobiMethod.h" header file.All the functionallity of this method exept one is same as "Jacobi Iteration Method".
 
 2-> In jacobi method , the algorithm changes the value of variables when the value of all variables get changed.But in Gauss-Seidel method , the algorithm immediately changes the value of each variable when it get changed. I had not waited for the change of all variables. 
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
-# 3. Gauss Elimination Method:
+## 3. Gauss Elimination Method:
 
 I used this method to solve a system of linear equations using an augmented matrix form.
 
@@ -43,7 +45,7 @@ Then the solution is printed
 .
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------
-# 4. Gauss-Jordan Elimination Method:
+## 4. Gauss-Jordan Elimination Method:
 
 1-> In this method, the algorithm first convert the coefficient matrix into Row echelon form(Gaussian elimaination) using the method"bool GaussElimination(vector<vector<double>> &coefficients) " from "GaussElimination.h" header file . The operation is same as Gauss-Elimination Method.To do this , we also check the consistency using the function (int checkConsistency(vector<vector<double>> &coefficients)) from "GaussElimination.h" header file.
 
@@ -57,7 +59,7 @@ After this , we simply printed the solution of the n unknowns.
 .
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
-# 5. Runge - Kutta(RK4) Method:
+## 5. Runge - Kutta(RK4) Method:
 
 1-> At first the "void solveDifferentialEquation()" method takes the input from the user(initial value of x, intital value of y , step size and last value of x).
 
@@ -74,8 +76,8 @@ ________________________________________________________________________________
                                    2)  Aziz Khan
                                      Roll: 2107034
 _________________________________________________________________________________________________________________________
-## Shahriar Aziz Khan (2107032)
-# 1. Matrix inversion
+# Shahriar Aziz Khan (2107032)
+## 1. Matrix inversion
 
 Initialization:
 
