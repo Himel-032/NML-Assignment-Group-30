@@ -1,85 +1,87 @@
 #ifndef NEWTON_RAPHSON_H
 #define NEWTON_RAPHSON_H
 
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
+
 using namespace std;
 
-double tolerance = 1e-6;
-int maxIterations = 100;
-int degree;
-vector<double> coeffs;
-double initialGuess;
-
-void getInputs() {
-    cout << "Enter the highest power of x: ";
-    cin >> degree;
-    coeffs.resize(degree + 1);
-    cout << "Enter the coefficients (from highest degree to lowest): ";
-    for (int i = 0; i <= degree; i++) {
-        cin >> coeffs[i];
-    }
-    cout << "Enter the initial guess: ";
-    cin >> initialGuess;
-}
-
-double evaluate(double x) {
+double polynomial_newton(double x, const vector<double>& coefficients) {
     double result = 0.0;
-    int currentDegree = coeffs.size() - 1;
-    for (double coeff : coeffs) {
-        result += coeff * pow(x, currentDegree--);
+    int degree = coefficients.size() - 1;
+    for (int i = 0; i <= degree; ++i) {
+        result += coefficients[i] * pow(x, degree - i);
     }
     return result;
 }
 
-double numericalDerivative(double x) {
-    double h = 1e-5;
-    return (evaluate(x + h) - evaluate(x)) / h;
+double polynomialDerivative(double x, const vector<double>& coefficients) {
+    double result = 0.0;
+    int degree = coefficients.size() - 1;
+    for (int i = 0; i < degree; ++i) {
+        result += coefficients[i] * (degree - i) * pow(x, degree - i - 1);
+    }
+    return result;
 }
 
-double newtonRaphsonMethod(double initialGuess) {
-    double x = initialGuess;
-    for (int i = 0; i < maxIterations; i++) {
-        double f_x = evaluate(x);
-        double f_prime_x = numericalDerivative(x);
+double newtonRaphson(double initial_guess, const vector<double>& coefficients, double epsilon, int max_iterations) {
+    double x_n = initial_guess;
+    for (int iteration = 0; iteration < max_iterations; ++iteration) {
+        double f_x_n = polynomial_newton(x_n, coefficients);
+        double f_prime_x_n = polynomialDerivative(x_n, coefficients);
 
-        if (abs(f_prime_x) < tolerance) return x;
-
-        double x_new = x - f_x / f_prime_x;
-        if (abs(x_new - x) < tolerance) return x_new;
-
-        x = x_new;
-    }
-    return x;
-}
-
-void findRoots() {
-    set<double> roots;
-    for (double guess = initialGuess - 1; guess <= initialGuess + 1; guess += 0.1) {
-        double root = newtonRaphsonMethod(guess);
-
-        bool isUnique = true;
-        for (double r : roots) {
-            if (abs(root - r) < tolerance) {
-                isUnique = false;
-                break;
-            }
+        if (fabs(f_prime_x_n) < epsilon) {
+            return NAN; 
         }
 
-        if (isUnique && abs(evaluate(root)) < tolerance) {
-            roots.insert(root);
-        }
-    }
+        double x_n_plus_1 = x_n - f_x_n / f_prime_x_n;
 
-    cout << "Roots found:\n";
-    for (double root : roots) {
-        cout << fixed << setprecision(3) << root << " ";
+        if (fabs(x_n_plus_1 - x_n) < epsilon) {
+            return x_n_plus_1; 
+        }
+
+        x_n = x_n_plus_1; 
     }
-    cout << endl;
+    return NAN; 
 }
 
 void newton_raphson() {
-    getInputs();
-    findRoots();
+    int power;
+    cout << "Enter the degree (power) of the polynomial: ";
+    cin >> power;
+
+    vector<double> coefficients(power + 1);
+    cout << "Enter the coefficients (highest to lowest degree): ";
+    for (int i = 0; i <= power; ++i) {
+        cin >> coefficients[i];
+    }
+
+    double epsilon = 1e-6;  
+    int max_iterations = 1000;  
+    set<double> uniqueRoots; 
+
+    for (double i = -10; i <= 20; i += 1) { 
+        double root = newtonRaphson(i, coefficients, epsilon, max_iterations);
+        if (!isnan(root)) { 
+            bool isUnique = true;
+            for (const auto& uniqueRoot : uniqueRoots) {
+                if (fabs(root - uniqueRoot) < epsilon) {
+                    isUnique = false;
+                    break;
+                }
+            }
+
+            if (isUnique) {
+                uniqueRoots.insert(root); 
+            }
+        }
+    }
+
+    cout << fixed << setprecision(4); 
+    cout << "Approximate roots of the polynomial are:\n";
+    for (const auto& root : uniqueRoots) {
+        cout << root << " ";
+    }
+    cout << endl; 
 }
 
-#endif
+#endif 
